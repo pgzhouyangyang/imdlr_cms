@@ -6,7 +6,7 @@
               <div class="search-select">
                   <el-select v-model="selectValue" clearable placeholder="请选择">
                   <el-option
-                    v-for="item in options"
+                    v-for="item in searchOptions"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -30,8 +30,10 @@
           <el-table
           ref="multipleTable"
           show-overflow-tooltip
-          :max-height="maxHeight"
+          :cell-class-name="cellStyleFn"
+          :height="maxHeight"
           :data="tableData"
+          element-loading-text="加载中"
           @row-click="rowClick"
           @row-dblclick="rowDblclick"
           @selection-change="selectionChange"
@@ -44,22 +46,30 @@
           align="center"
           width="55">
         </el-table-column>
-          <el-table-column v-for="item in columnData" :key="item.prop"
+          <el-table-column v-for="(item,index) in columnData" :key="item.prop"
             :fixed="item.fixed?item.fixed:false"
             :prop="item.prop"
             :label="item.label"
             align="center"
             :min-width="item.width"
             >
+            <template slot-scope="scope" v-if="index == 2">
+               <el-popover trigger="hover" placement="top">
+                 <p>姓名: {{ scope.row.name }}</p>
+                 <p>审核状态: {{ scope.row.applyStatus }}</p>
+                 <div slot="reference" class="name-wrapper">
+                   <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                 </div>
+               </el-popover>
+            </template>
           </el-table-column>
           <slot name="operation"></slot>
-
         </el-table>
 
       </div>
 
       <!-- 表格底部 -->
-      <div class="table-footer" v-if="tableData.length">
+      <div class="table-footer" >
           <div class="pull-left" v-if="deleteBtn">
             <el-button type="danger" :disabled="deleteDisabled" icon="el-icon-delete" @click="deleteEvent">删除</el-button>
             <slot name="table-footer-left"></slot>
@@ -93,7 +103,7 @@ export default {
             type: Boolean,
             default: true
         },
-        options: {
+        searchOptions: {
             type: Array,
             default: []
         },
@@ -112,11 +122,12 @@ export default {
     },
     data() {
         return {
+            loading: true,
             selectValue: "",
             inputValue: "",
             pageSize: 20,
             pageNow: 1,
-            maxHeight: "250",
+            maxHeight: "500",
             multipleSelection: []
         }
     },
@@ -131,13 +142,24 @@ export default {
             return true
         }
     },
+    watch: {
+        tableData(newVal) {
+            if(newVal.length) {
+                this.$nextTick(()=>{
+                    var height = document.getElementById("tableWrapp").clientHeight
+                    this.maxHeight = height
+                });
+            }
+        }
+    },
     mounted() {
-        var height = document.getElementById("tableWrapp").clientHeight
-        this.$nextTick(()=>{
-            this.maxHeight = height
-        });
+        // this.$nextTick(()=>{
+            // var height = document.getElementById("tableWrapp").clientHeight
+            // this.maxHeight = height
+        // });
         window.onresize = () => {
-            var height = document.getElementById("tableWrapp").clientHeight
+            var height = document.getElementById("tableWrapp")?document.getElementById("tableWrapp").clientHeight: ""
+            console.log(height);
             this.maxHeight = height
         }
     },
@@ -161,6 +183,7 @@ export default {
         deleteEvent() {
             this.$emit("deleteEvent",this.multipleSelection)
         },
+        // 单击
         rowClick(row, event, column) {
             if(column.type == "selection") {
                 this.$refs.multipleTable.toggleRowSelection(row)
@@ -174,53 +197,22 @@ export default {
         rowDblclick(row) {
             this.$emit("rowDblclick",row)
         },
+        // 表格选中事件
         selectionChange(selections) {
             this.multipleSelection = selections;
+        },
+        cellStyleFn(val) {
+            if(val.columnIndex == 3) {
+                if(val.row.applyStatus == "待审核") {
+                    val.column.className = "eeee"
+                }
+            }
+            console.log(val);
         }
     }
 }
 </script>
 
 <style lang="css">
-    .table-group {
-        height: 100%;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: stretch;
-    }
-    .search-wrapp, .table-footer {
-        height: 40px;
-    }
-    .search-wrapp::after {
-        content: "";
-        display: block;
-        clear: both;
-    }
-    .pull-left {
-        display: flex;
-        float: left;
-    }
-    .pull-right {
-        float: right;
-    }
-    .search-select {
-        width: 150px
-    }
-    .search-select, .search-input {
-        margin-right: 10px;
-    }
 
-    .table-wrapp {
-        margin-top: 20px;
-        flex: 1;
-        overflow: hidden;
-    }
-    .table-footer {
-        margin-top: 20px;
-    }
-    .el-pagination {
-        margin-top: 4px;
-    }
 </style>

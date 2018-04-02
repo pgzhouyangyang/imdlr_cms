@@ -4,20 +4,24 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        breadListState: [
-            {
-                name: "账号管理",
-                path: "/"
-            },
-            {
-                name: "待审核列表",
-                path: "/authstr"
-            }
-        ]
+        session_key: window.localStorage.getItem("session_key")
     },
     mutations: {
-        breadListMutations(state,list){
-          state.breadListState = list
+        setSession(state,val) {
+            state.session_key = val;
+            if(navigator.cookieEnabled) {
+                window.localStorage.setItem("session_key",val);
+            }
+
+        },
+        clearSession(state) {
+            state.session_key = "";
+            if(navigator.cookieEnabled) {
+                window.localStorage.removeItem("session_key");
+            }
+        },
+        localSession(state) {
+            state.session_key = window.localStorage.getItem("session_key");
         }
     }
 })
