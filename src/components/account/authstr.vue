@@ -121,7 +121,6 @@
                 if(this.query) {
                     obj[this.query] = this.queryValue
                 }
-				obj.applyStatus = 0;
                 return obj
             }
         },
@@ -145,14 +144,9 @@
                     appendUrl: "/"+_this.pageNow+"/"+_this.pageSize,
                     param: _this.getDataQuery,
 				}).then((data) => {
-					// if(data) {
-					//
-					// }
 					this.tableData = this.addSequence(data.data.userList);
                     this.count = data.data.count;
                     this.loading = false;
-				}).catch((data)=>{
-
 				})
 			},
 			// messageText
@@ -168,36 +162,41 @@
 									ids: data
 								}
                             }).then((data)=> {
-								if(data.data.success) {
-									that.msg = "驳回成功";
-									that.getData();
-								} else {
-									that.msg = data.data.errmsg;
-								}
 								done();
 								instance.confirmButtonLoading = false;
+								if(data.data.success) {
+									that.$message({
+										type: 'success',
+										message: "驳回成功"
+									});
+									that.getData();
+								} else {
+
+								}
                             })
                         } else {
                             applyReject({
                                 appendUrl: "/"+data,
                             }).then((data)=> {
-								if(data.data.success) {
-									that.msg = "驳回成功";
-									that.getData();
-								} else {
-									that.msg = data.data.errmsg;
-								}
 								done();
 								instance.confirmButtonLoading = false;
+								if(data.data.success) {
+									that.$message({
+										type: 'success',
+										message: "驳回成功"
+									});
+									that.getData();
+								}
+
                             })
                         }
-					},
-					then() {
-						that.$message({
-							type: 'success',
-							message: that.msg
-						});
 					}
+					// then() {
+					// 	that.$message({
+					// 		type: 'error',
+					// 		message: that.msg
+					// 	});
+					// }
 
 				})
 			},
@@ -215,6 +214,8 @@
                                         ids: ids,
                                     }
                             }).then((data)=> {
+								done();
+								instance.confirmButtonLoading = false;
 								if(data.data.success) {
 									amount({
 										param: {
@@ -223,24 +224,25 @@
 										}
 									}).then((msg)=> {
 										if(msg.data.success) {
-											that.msg = "提交成功";
+											that.$message({
+												type: 'success',
+												message: "提交成功"
+											});
 											that.getData();
 										} else {
-											that.msg = msg.data.errmsg
+
 										}
-
 									})
-
 								} else {
-									that.msg = msg.data.errmsg
+
 								}
-								done();
-								instance.confirmButtonLoading = false;
                             })
                         } else {
                             applyPass({
                                 appendUrl: "/"+ids,
                             }).then((data)=> {
+								done();
+								instance.confirmButtonLoading = false;
 								if(data.data.success) {
 									amount({
 										param: {
@@ -248,29 +250,23 @@
 											amount: instance.inputValue
 										}
 									}).then((msg)=> {
-										console.log(msg);
+
 										if(msg.data.success) {
-											that.msg = "提交成功";
+											that.$message({
+												type: 'success',
+												message: "提交成功"
+											});
 											that.getData();
 										} else {
-											that.msg = msg.data.errmsg
-										}
-										done();
-										instance.confirmButtonLoading = false;
-									})
 
+										}
+									})
 								} else {
-									that.msg = msg.data.errmsg
+
 								}
 
                             })
                         }
-					},
-					then() {
-						that.$message({
-							type: 'success',
-							message: that.msg
-						});
 					}
 
 				})

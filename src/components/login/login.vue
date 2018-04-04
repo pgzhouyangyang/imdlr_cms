@@ -8,13 +8,14 @@
                     <el-input  auto-complete="off" v-model="loginForm.loginName" placeholder="用户名"></el-input>
                   </el-form-item>
                   <el-form-item  prop="password">
-                    <el-input  auto-complete="off" v-model="loginForm.password" :type="inputType" placeholder="密码" :maxlength="15"></el-input>
-                    <el-switch
+                    <el-input  auto-complete="off" v-model="loginForm.password" :type="inputType" placeholder="密码" :maxlength="15" ></el-input>
+                    <!-- <el-switch
                       v-model="switchValue"
                       active-color="#3190e8"
                       inactive-color="#dcdfe6"
                       >
-                    </el-switch>
+                    </el-switch> -->
+                    <i :class="eyes" id="eyes" @click="switchEvent"></i>
                   </el-form-item>
                   <el-form-item>
                     <el-button :loading="submiting" type="primary" @click="submitForm('loginForm')">{{submitBtnText}}</el-button>
@@ -45,7 +46,7 @@ export default {
                 ],
 
             },
-            switchValue: "password",
+            showPassword: false,
             submiting: false,
             submitBtnText: "登录"
         }
@@ -64,6 +65,7 @@ export default {
                     }).then((data)=> {
                     if(data.data.sessionKey) {
                         this.$store.commit("setSession",data.data.sessionKey);
+                        this.$store.commit("setAdminName",data.data.adminInfo.name);
                         if(this.$route.query.redirect) {
                             this.$router.replace({
                                 path: this.$route.query.redirect
@@ -71,7 +73,7 @@ export default {
                         } else {
 
                             this.$router.replace({
-                                path: "/account"
+                                path: "/home"
                             })
                         }
 
@@ -95,11 +97,17 @@ export default {
                 return false;
               }
           });
-        }
+      },
+      switchEvent() {
+          this.showPassword = !this.showPassword
+      }
     },
     computed: {
         inputType() {
-            return this.switchValue?"text":"password"
+            return this.showPassword?"text":"password"
+        },
+        eyes() {
+            return this.showPassword?"iconfont open-eyes":"iconfont close-eyes"
         }
     }
 
@@ -107,19 +115,18 @@ export default {
 </script>
 
 <style lang="css">
-
     .login {
         width: 100%;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: url(../../../static/images/bg.jpg) center -130px no-repeat;
+        background: url(/static/img/bg.jpg) center -130px no-repeat;
     }
     .login-wrap {
         width: 350px;
         padding: 40px 40px 20px;
-        background-color: rgba(20,25,36,0.8)
+        background-color: rgba(20,25,36,0.8);
     }
     .login-wrap form {
         width: 300px;
@@ -141,5 +148,14 @@ export default {
         right: 10px;
         top: 10px;
     }
-
+    #eyes {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        font-size: 20px;
+        color: #000;
+        cursor: pointer;
+        height: 20px;
+        line-height: 20px;
+    }
 </style>

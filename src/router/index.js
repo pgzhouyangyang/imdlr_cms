@@ -3,6 +3,10 @@ import Router from 'vue-router'
 import store from '../store'
 // 登录
 import Login from '@/components/login/login'
+
+// 默认首页
+import Home from '@/components/home/home'
+
 // 账号管理
 import Account from '@/components/account/account'
 import Authstr from '@/components/account/authstr'
@@ -26,11 +30,19 @@ import Admin from '@/components/system/administrator'
 Vue.use(Router)
 
 const router = new Router({
-     mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/',
       redirect: '/login'
+    },
+    {
+        path: '/home',
+        name: 'Home',
+        component: Home,
+        meta: {
+            requireAuth: true
+        },
     },
     {
       path: '/login',
@@ -173,21 +185,21 @@ const router = new Router({
 
   ]
 })
-router.beforeEach((to, from, next) => {
-    if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
-        if (store.state.session_key) {  // 通过vuex state获取当前的token是否存在
-            next();
-        }
-        else {
-            next({
-                path: '/login',
-                query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
-            })
-        }
-    }
-    else {
-        next();
-    }
-})
+// router.beforeEach((to, from, next) => {
+//     if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
+//         if (store.state.session_key) {  // 通过vuex state获取当前的token是否存在
+//             next();
+//         }
+//         else {
+//             next({
+//                 path: '/login',
+//                 query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
+//             })
+//         }
+//     }
+//     else {
+//         next();
+//     }
+// })
 
 export default router

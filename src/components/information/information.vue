@@ -2,17 +2,15 @@
   <div class="container">
       <my-header/>
       <bread/>
-      <div id="editor" type="text/plain" style="width:100%;height:400px;"></div>
+      <div class="">
+          待开发
+      </div>
   </div>
 </template>
 
 <script>
 import MyHeader from "../base/header"
 import Bread from "../base/bread"
-import TableGroup from "../base/table"
-import "../../../static/plugins/utf8-jsp/ueditor.config"
-import "../../../static/plugins/utf8-jsp/ueditor.all"
-import "../../../static/plugins/utf8-jsp/lang/zh-cn/zh-cn"
 export default {
     data() {
         return {
@@ -29,7 +27,6 @@ export default {
     components: {
         MyHeader,
         Bread,
-        TableGroup
     }
 }
 </script>

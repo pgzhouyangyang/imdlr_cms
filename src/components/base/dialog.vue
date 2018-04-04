@@ -2,10 +2,10 @@
     <el-dialog
         :title="title"
         :visible.sync="dialogVisible"
-        width="60%"
+        :width="width"
         top="0"
         >
-        <div class="scrollbar dialog-main" ref="scrollbarDialog">
+        <div class="scrollbar dialog-main" ref="scrollbarDialog" v-loading="loading">
             <div class="scrollbar__wrap">
                 <div class="scrollbar-view">
                     <slot name="dialog-body">
@@ -41,11 +41,16 @@ export default {
         isFooter: {
             Boolean,
             default: false
+        },
+        width: {
+            String,
+            default: "60%"
         }
     },
     data() {
         return {
-            dialogVisible: false
+            dialogVisible: false,
+            loading: false
         }
     },
     mounted() {
@@ -64,16 +69,18 @@ export default {
         },
         open() {
             this.dialogVisible = true;
+            this.loading = true;
             setTimeout(()=> {
                 scrollbar(this.$refs.scrollbarDialog)
             },500)
-
         },
         close() {
             this.dialogVisible = false;
+            this.loading = false;
         },
         cancel() {
             this.dialogVisible = false;
+            this.loading = false;
         },
         confirm() {
             this.$emit("dialogConfirm")
@@ -89,11 +96,10 @@ export default {
         align-items: center;
     }
     .el-dialog__body {
-        height:400px;
+        max-height:400px;
     }
     .el-dialog {
         margin: 0;
-        min-width: 700px;
     }
     .dialog-main {
         height: 100%;

@@ -1,6 +1,4 @@
 import Vue from 'vue'
-// import ElementUI from 'element-ui'
-// Vue.use(ElementUI)
 
 export const messageText = function(_this, {message = "", title = "提示", type = "warning",beforeClose = "", then = ""} = {}) {
     if(typeof _this != "object") {
@@ -37,19 +35,13 @@ export const messageFrom = function(_this, {message= "", placeholder = "", input
       inputPattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
       inputErrorMessage: inputErrorMessage,
       beforeClose: (action, instance, done)=> {
-         // 输入框的值
-          // instance.inputValue
+
         if (action === 'confirm') {
             instance.confirmButtonLoading = true;
             instance.confirmButtonText = '提交中...';
             if(typeof beforeClose == "function") {
                 beforeClose(action, instance, done)
             }
-            // setTimeout(() => {
-            //     done();
-            //     _this.msg = "提交成功！"
-            //     instance.confirmButtonLoading = false;
-            // }, 3000);
         } else {
             done()
         }
@@ -58,14 +50,7 @@ export const messageFrom = function(_this, {message= "", placeholder = "", input
         if(typeof then == "function") {
             then()
         }
-      // _this.$message({
-      //   type: 'success',
-      //   message: _this.msg
-      // });
     }).catch(() => {
 
     });
 }
-// export const messageText = function() {
-//
-// }

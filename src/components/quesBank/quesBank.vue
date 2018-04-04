@@ -51,6 +51,7 @@
                       border
                       header-row-class-name="table-th"
                       @row-click="rowClick"
+                      @row-dblclick="rowDblclick"
                       @selection-change="selectionChange"
                       >
                       <el-table-column
@@ -160,6 +161,7 @@
                     <td>试题编码：</td>
                     <td>{{questionDetail.code}}</td>
                 </tr>
+
                 <tr>
                     <td>等&emsp;&emsp;级：</td>
                     <td>{{questionDetail.skillLevel}}</td>
@@ -173,6 +175,10 @@
                     <td>{{questionDetail.time}}</td>
                 </tr>
                 <tr>
+                    <td>工种名称：</td>
+                    <td colspan="3">{{questionDetail.skillItem}}</td>
+                </tr>
+                <tr>
                     <td>试题内容：</td>
                     <td colspan="3">
                         <div style="text-align:left">
@@ -183,7 +189,7 @@
                             </div>
                             <div class="testOptions" v-if="questionDetail.type==5">
                                 <p v-for="(it,ind) in questionDetail.calculations" v-if="it.type=='x'">
-                                    变量：{{it.var}}={{it.val}} ({{it.scheme==1?"最大值："+it.maxValue+"最小值："+it.minValue+"小数位数"+it.decimalPlaces : "备选值："+it.alternative}})
+                                    变量：{{it.var}}={{it.val}} ({{it.scheme==1?"最大值："+it.maxValue+ " 最小值："+it.minValue+" 小数位数"+it.decimalPlaces : " 备选值："+it.alternative}})
                                 </p>
                             </div>
                         </div>
@@ -233,6 +239,9 @@ export default {
     data() {
         return {
             options: [{
+              value: 'code',
+              label: '试题编号'
+            }, {
               value: 'content',
               label: '试题内容'
             }, {
@@ -269,7 +278,7 @@ export default {
         }
     },
     created() {
-        this.getTree()
+        this.getTree();
     },
     computed: {
         getDataQuery() {
@@ -339,10 +348,13 @@ export default {
                             appendUrl: "/"+data,
                         }).then((data)=> {
 							if(data.data.success) {
-	                        	that.msg = state+"成功"
+                                that.$message({
+            						type: 'success',
+            						message: state+"成功"
+            					});
 								that.getData()
 							} else {
-								that.msg = data.data.errmsg
+
 							}
 							done();
 							instance.confirmButtonLoading = false;
@@ -352,21 +364,18 @@ export default {
                             appendUrl: "/"+data,
                         }).then((data)=> {
 							if(data.data.success) {
-	                        	that.msg = state+"成功"
+                                that.$message({
+            						type: 'success',
+            						message: state+"成功"
+            					});
 								that.getData()
 							} else {
-								that.msg = data.data.errmsg
+
 							}
 							done();
 							instance.confirmButtonLoading = false;
                         })
                     }
-				},
-				then() {
-					that.$message({
-						type: 'success',
-						message: that.msg
-					});
 				}
 
 			})
@@ -380,6 +389,16 @@ export default {
                 this.$refs.multipleTable.toggleRowSelection(row)
             }
 
+        },
+        rowDblclick(row) {
+            this.$refs.dialog.open();
+            this.questionDetail = {};
+            questionDetail({
+                appendUrl: "/"+row.id
+            }).then((data)=> {
+                this.questionDetail = this.filterTest(data.data.test);
+                this.$refs.dialog.loading = false;
+            })
         },
         // 表格选中事件
         selectionChange(selections) {
@@ -446,13 +465,13 @@ export default {
         },
         // 基本信息
         infoView(row) {
-
+            this.$refs.dialog.open();
+            this.questionDetail = {};
             questionDetail({
                 appendUrl: "/"+row.id
             }).then((data)=> {
-                console.log(data);
                 this.questionDetail = this.filterTest(data.data.test);
-                this.$refs.dialog.open();
+                this.$refs.dialog.loading = false;
             })
         }
     }

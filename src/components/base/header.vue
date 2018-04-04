@@ -2,7 +2,7 @@
     <div class="header">
         <!-- logo -->
         <div class="logo">
-            <img src="../../../static/images/logo.png" alt="" height="61">
+            <img src="../../../static/img/logo.png" alt="" height="61">
         </div>
         <!-- 导航菜单 -->
         <el-menu
@@ -24,14 +24,22 @@
           <el-menu-item index="quesBank" :route="{path:'/quesBank'}">
               题库管理
           </el-menu-item>
-          <el-menu-item index="information" :route="{path:'/information'}">
+          <el-menu-item index="information" >
+              <!-- :route="{path:'/information'}" -->
               消息管理
           </el-menu-item>
           <el-submenu index="attachment">
               <template slot="title">附件管理</template>
-              <el-menu-item index="skillnotice" :route="{path:'/attachment/skillnotice'}">鉴定公告</el-menu-item>
-              <el-menu-item index="laws" :route="{path:'/attachment/laws'}">法律法规</el-menu-item>
-              <el-menu-item index="standard" :route="{path:'/attachment/standard'}">实操规范</el-menu-item>
+              <el-menu-item index="skillnotice" >鉴定公告
+                  <!-- :route="{path:'/attachment/skillnotice'}" -->
+              </el-menu-item>
+              <el-menu-item index="laws" >法律法规
+                  <!-- :route="{path:'/attachment/laws'}" -->
+              </el-menu-item>
+              <el-menu-item index="standard" >实操规范
+                  <!-- :route="{path:'/attachment/standard'}" -->
+              </el-menu-item>
+
           </el-submenu>
           <el-submenu index="system">
               <template slot="title">系统管理</template>
@@ -42,13 +50,15 @@
         </el-menu>
         <!-- 登录/退出 -->
         <div class="user">
-            <span class="username">周洋洋</span>
+            <span class="username">{{name}}</span>
             <a class="exitBtn" @click="exitBtn">退出</a>
         </div>
     </div>
 </template>
 
 <script>
+import { loginOut } from "@/api/getData"
+import { baseUrl } from '../../config/env'
 export default {
     data() {
         return {
@@ -63,12 +73,20 @@ export default {
             this.activeIndex = newVal.path.substring(newVal.path.lastIndexOf("/")+1);
        }
     },
+    computed: {
+        name() {
+
+            return this.$store.state.adminName
+        }
+    },
     methods: {
         exitBtn() {
-            this.$store.commit("clearSession")
-            this.$router.replace({
-                path: "/login"
-            })
+            this.$store.commit("clearSession");
+            location.href = baseUrl + "/sys/logout";
+
+            // this.$router.replace({
+            //     path: "/login"
+            // })
 
         }
     }

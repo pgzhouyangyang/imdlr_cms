@@ -2,7 +2,8 @@ import request from '@/config/request'
 
 // 登录
     export const login = (data) => request('/sys/login',data,"POST");
-
+// 退出
+    export const loginOut = (data) => request('/sys/logout',data);
 // 账号管理
 
     // 获取待审核列表
@@ -57,6 +58,10 @@ import request from '@/config/request'
     export const editDictionary = data => request('/dict/edit',data,"POST");
     // 字典删除
     export const delDictionary = data => request('/dict/del',data,"POST");
+
+    // 获取工种关联等级
+    export const releLevel = data => request('/dict/getCorrelation',data);
+    export const saveReleLevel = data => request('/dict/saveCorrelation',data,"POST");
 
     // 获取管理员数据
     export const admin = data => request('/sysAdmin/all',data,"POST");

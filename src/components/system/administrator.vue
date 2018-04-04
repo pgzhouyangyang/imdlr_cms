@@ -11,7 +11,7 @@
                 <el-form-item label="登录名" prop="loginName">
                   <el-input v-model="ruleForm.loginName" clearable></el-input>
                 </el-form-item>
-				<el-form-item label="密码" prop="password" :rules="passwordRules">
+				<el-form-item label="密码" prop="password">
                   <el-input v-model="ruleForm.password" clearable type="password" :maxlength="15"></el-input>
                 </el-form-item>
 				<el-form-item label="手机号" prop="mobile">
@@ -110,6 +110,10 @@ export default {
 				loginName: [
 					{ required: true, message: '登录名不能为空', trigger: 'blur' }
 				],
+				password: [
+					{ required: true, message: '密码不能为空', trigger: 'blur' },
+					{  validator: isvalidPwd, trigger: 'blur' }
+				],
 				mobile: [
 					{validator: isvalidPhone, trigger: 'blur'  }
 				],
@@ -193,10 +197,13 @@ export default {
                             appendUrl: "/"+data,
                         }).then((data)=> {
 							if(data.data.success) {
-	                        	that.msg = state+"成功"
+								that.$message({
+            						type: 'success',
+            						message: state+"成功"
+            					});
 								that.getData()
 							} else {
-								that.msg = data.data.errmsg
+
 							}
 							done();
 							instance.confirmButtonLoading = false;
@@ -206,21 +213,18 @@ export default {
                             appendUrl: "/"+data,
                         }).then((data)=> {
 							if(data.data.success) {
-	                        	that.msg = state+"成功"
+								that.$message({
+            						type: 'success',
+            						message: state+"成功"
+            					});
 								that.getData()
 							} else {
-								that.msg = data.data.errmsg
+
 							}
 							done();
 							instance.confirmButtonLoading = false;
                         })
                     }
-				},
-				then() {
-					that.$message({
-						type: 'success',
-						message: that.msg
-					});
 				}
 
 			})
@@ -258,7 +262,8 @@ export default {
 		rowDblclick(row) {
 			this.stateText = "编辑";
 			this.$refs.append.open();
-			this.ruleForm = row
+			this.ruleForm = {...row};
+			this.ruleForm.password = "***************";
 		},
 		// 保存
 		save() {
@@ -278,16 +283,17 @@ export default {
                                message: "添加成功"
                              });
                          } else {
-                             this.$message({
-                               type: 'error',
-                               message: data.data.errmsg
-                             });
+
                          }
 
                      })
                  } else if(this.stateText == "编辑") {
+					 if(this.ruleForm.password == "***************") {
+						 this.ruleForm.password = "";
+					 }
+
                     editAdmin({
-                        param: that.ruleForm
+                        param: this.ruleForm
                     }).then((msg)=> {
 						if(msg.data.success) {
 							this.getData();
@@ -297,10 +303,7 @@ export default {
 							  message: "修改成功"
 							});
 						} else {
-							this.$message({
-							  type: 'error',
-							  message: msg.data.errmsg
-							});
+
 						}
                     })
                  }
@@ -327,20 +330,17 @@ export default {
                         }
                     }).then((msg)=> {
                         if(msg.data.success) {
+							that.$message({
+								type: 'success',
+								message: "删除成功"
+							});
                             that.getData();
-                            that.msg = "删除成功"
                         } else {
-                            that.msg = msg.data.errmsg
+
                         }
                         done();
                         instance.confirmButtonLoading = false;
                     })
-                },
-                then() {
-                    that.$message({
-                      type: 'success',
-                      message: that.msg
-                    });
                 }
 
             })

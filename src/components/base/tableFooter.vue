@@ -2,7 +2,9 @@
     <div class="table-footer">
         <div class="pull-left" >
           <el-button type="danger" :disabled="deleteDisabled" icon="el-icon-delete" @click="deleteEvent" v-if="deleteBtn">删除</el-button>
-          <slot name="table-footer-left"></slot>
+          <slot name="table-footer-left">
+
+          </slot>
         </div>
         <div class="pull-right">
             <div class="table-footer-right">

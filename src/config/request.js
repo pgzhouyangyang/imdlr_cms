@@ -5,7 +5,8 @@ import vue from 'vue'
 // 引入axios
 import axios from "axios"
 axios.defaults.withCredentials = true;
-let source = axios.CancelToken.source();
+var CancelToken = axios.CancelToken;
+var source = CancelToken.source();
 // axios.defaults.timeout = 2500;
 // http request 拦截器
 axios.interceptors.request.use(
@@ -30,6 +31,7 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
     response => {
+
         switch (response.data.errcode) {
             case 60000:
                 vue.prototype.$message.error(response.data.errmsg);
@@ -37,14 +39,16 @@ axios.interceptors.response.use(
             case 60101:
                 // 返回 401 清除token信息并跳转到登录页面
                 store.commit("clearSession");
+
                 vue.prototype.$alert("登录超时，请重新登录","提示",{
                     type: 'warning'
                 }).then(()=> {
-                    console.log("login");
                     router.replace({
                         path: '/login',
                         query: {redirect: router.currentRoute.fullPath}
                     })
+                }).catch(()=> {
+
                 })
                 break;
             case 60102:
@@ -61,6 +65,7 @@ axios.interceptors.response.use(
     },
     error => {
         vue.prototype.$message.error("服务器异常请联系管理员");
+        source.cancel()
         // if (error.response) {
         //     switch (error.response.status) {
         //         case 401:
@@ -98,7 +103,7 @@ export default (url = "", {appendUrl = "", param = {}} = {}, type = "GET") => {
 		};
 	}
 	let requestConfig = {
-        cancelToken:source.token
+
     };
     if (type == 'POST') {
 		let params = new FormData()
@@ -110,7 +115,7 @@ export default (url = "", {appendUrl = "", param = {}} = {}, type = "GET") => {
     }
 
     return new Promise((resolve, reject) => {
-        axios(Object.assign({url:url, method:type},requestConfig)).
+        axios(Object.assign({url:url,cancelToken: source.token, method:type},requestConfig)).
         then((res)=> {
             resolve(res)
         }).

@@ -82,11 +82,54 @@
                       @deleteEvent="deleteEvent"
                       @handleSizeChange="handleSizeChange"
                       @handleCurrentChange="handleCurrentChange"
-                  ></table-footer>
+                  >
+                <el-button type="success" icon="el-icon-share" slot="table-footer-left" :disabled="releDisabled" v-if="releBtn" @click="releLevel">关联等级</el-button>
+                </table-footer>
               </div>
           </div>
         </div>
       </div>
+      <dialog-box ref="dialog"
+      title="关联等级"
+      @dialogConfirm="dialogConfirm"
+      :isFooter="true"
+      width="600px"
+      >
+          <el-table
+          slot="dialog-body"
+          :data="levelData"
+          style="width: 100%"
+          height="271px"
+          ref="relemultipleTable"
+          stripe
+          border
+          header-row-class-name="table-th"
+          @row-click="relerowClick"
+          @selection-change="releselectionChange"
+          >
+          <el-table-column
+          type="selection"
+          align="center"
+          width="55">
+           </el-table-column>
+          <el-table-column
+             type="index"
+             label="序号"
+             show-overflow-tooltip
+             tooltip-effect="light"
+             align="center"
+             width="80"
+             >
+           </el-table-column>
+          <el-table-column
+            prop="name"
+            label="工种名称"
+            show-overflow-tooltip
+            tooltip-effect="light"
+            align="center">
+          </el-table-column>
+        </el-table>
+      </dialog-box>
   </div>
 </template>
 
@@ -96,8 +139,9 @@ import Bread from "../base/bread"
 import Search from "../base/search"
 import List from "../base/list"
 import TableFooter from "../base/tableFooter"
+import DialogBox from "../base/dialog"
 import Append from "../base/append"
-import { dictionaryTree, dictionaryAll, addDictionary, editDictionary, delDictionary } from "@/api/getData"
+import { dictionaryTree, dictionaryAll, addDictionary, editDictionary, delDictionary, releLevel, saveReleLevel } from "@/api/getData"
 import { messageText, messageFrom } from "@/assets/js/message"
 import { clearForm } from "@/assets/js/common"
 export default {
@@ -131,10 +175,14 @@ export default {
             count: 0,
             // 表格选中数据
             multipleSelection: [],
+            relemultipleSelection: [],
             // 表格加载loading
             loading: false,
             // 左侧菜单数据
-            menuList: [],
+            menuList: [
+                {name:"油务员",id:1},
+                {name: "ddd",id:2}
+            ],
             // 每页显示数量
             pageSize: 20,
             // 当前页数
@@ -144,21 +192,22 @@ export default {
             // 查询参数
             query: "",
             queryValue: "",
+            levelData: []
         }
     },
     created() {
         // 获取表格数据
-        this.getData();
+        this.getTree();
     },
     computed: {
         // 查询参数
         getDataQuery() {
             var obj = {};
             if(this.query) {
-                obj["pId"] = this.currentMenuId;
+                obj["pid"] = this.currentMenuId;
                 obj[this.query] = this.queryValue
             } else {
-                obj["pId"] = this.currentMenuId;
+                obj["pid"] = this.currentMenuId;
             }
             return obj
         },
@@ -167,6 +216,15 @@ export default {
         },
         idDelBtn() {
             return this.currentMenuId == 0 ? false : true
+        },
+        releDisabled() {
+            if(this.multipleSelection.length) {
+                return false
+            }
+            return true
+        },
+        releBtn() {
+            return this.currentMenuId == 1 ? true : false
         }
     },
     components: {
@@ -175,13 +233,15 @@ export default {
         Search,
         TableFooter,
         Append,
-        List
+        List,
+        DialogBox
     },
     methods: {
         // 获取左侧菜单
         getTree() {
             dictionaryTree().then((data)=> {
                 this.menuList = this.addSequence(data.data.tree);
+                this.getData()
             });
         },
         getData() {
@@ -239,7 +299,7 @@ export default {
             this.ruleForm = {
                 name: row.name,
                 showId: row.showId,
-                pId: row.pId,
+                pid: row.pid,
                 id: row.id
             }
             this.$refs.append.open();
@@ -250,7 +310,7 @@ export default {
              if (valid) {
                  var that = this;
                  if(this.stateText == "添加") {
-                     this.ruleForm.pId = this.currentMenuId;
+                     this.ruleForm.pid = this.currentMenuId;
                      addDictionary({
                          param: that.ruleForm
                      }).then((data)=> {
@@ -262,27 +322,23 @@ export default {
                                message: "添加成功"
                              });
                          } else {
-                             this.$message({
-                               type: 'error',
-                               message: data.data.errmsg
-                             });
+
                          }
                      })
                  } else if(this.stateText == "编辑") {
                     editDictionary({
                         param: that.ruleForm
                     }).then((msg)=> {
-                        this.getData();
-                        this.$refs.append.close();
-                        this.$message({
-                          type: 'success',
-                          message: "保存成功"
-                        });
-                    }).catch((msg)=> {
-                        this.$message({
-                          type: 'error',
-                          message: msg
-                        });
+                        if(data.data.success) {
+                            this.getData();
+                            this.$refs.append.close();
+                            this.$message({
+                              type: 'success',
+                              message: "修改成功"
+                            });
+                        } else {
+
+                        }
                     })
                  }
              } else {
@@ -307,10 +363,13 @@ export default {
                         }
                     }).then((msg)=> {
                         if(msg.data.success) {
-                            that.getData();
-                            that.msg = "删除成功"
+                            this.getData();
+                            this.$message({
+                              type: 'success',
+                              message: "删除成功"
+                            });
                         } else {
-                            that.msg = msg.data.errmsg
+
                         }
                         done();
                         instance.confirmButtonLoading = false;
@@ -325,6 +384,50 @@ export default {
 
             })
         },
+        // 关联等级
+        releLevel() {
+            if(this.multipleSelection.length>1) {
+                this.$message.error("请选择一条记录");
+                return
+            }
+            this.$refs.dialog.open();
+            releLevel({
+                appendUrl: "/"+this.multipleSelection[0].id
+            }).then((data)=> {
+                this.levelData = data.data.levelList;
+                setTimeout(()=> {
+                    data.data.levelList.map((item)=> {
+                        if(item.isCorrelation) {
+                            this.$refs.relemultipleTable.toggleRowSelection(item)
+                        }
+                    });
+                    this.$refs.dialog.loading = false;
+                },100);
+            })
+
+        },
+        dialogConfirm() {
+            var ids= [];
+            this.relemultipleSelection.map((item)=> {
+                ids.push(item.id)
+            })
+            saveReleLevel({
+                appendUrl: "/"+this.multipleSelection[0].id,
+                param: {
+                    ids: ids
+                }
+            }).then((msg)=> {
+                if(msg.data.success) {
+                    this.$refs.dialog.close();
+                    this.$message({
+                      type: 'success',
+                      message: "关联成功"
+                    });
+                } else {
+                    
+                }
+            });
+        },
         // 单击
         rowClick(row, event, column) {
             if(column.type == "selection") {
@@ -334,18 +437,29 @@ export default {
                 this.$refs.multipleTable.toggleRowSelection(row)
             }
         },
+        relerowClick(row, event, column) {
+            if(column.type == "selection") {
+                this.$refs.relemultipleTable.toggleRowSelection(row)
+            } else {
+                this.$refs.relemultipleTable.clearSelection();
+                this.$refs.relemultipleTable.toggleRowSelection(row)
+            }
+        },
         // 表格选中事件
         selectionChange(selections) {
             this.multipleSelection = selections;
         },
+        releselectionChange(selections) {
+            this.relemultipleSelection = selections;
+        },
         // 分页
         handleSizeChange(val) {
             this.pageSize = val;
-            this.getData({pId:this.currentMenuId});
+            this.getData({pid:this.currentMenuId});
         },
         handleCurrentChange(val) {
             this.pageNow = val;
-            this.getData({pId:this.currentMenuId});
+            this.getData({pid:this.currentMenuId});
         },
         //搜索
         searchEvent(val) {

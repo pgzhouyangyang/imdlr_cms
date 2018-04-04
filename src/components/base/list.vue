@@ -13,7 +13,7 @@
           <div class="list-view scrollbar" ref="scrollbar">
               <div class="scrollbar__wrap">
                   <div class="scrollbar-view">
-                      <el-menu-item :index="item[label]" v-for="(item,index) in menuList" :key="index">
+                      <el-menu-item  v-for="(item,index) in menuList" :key="index" :index="item[label].toString()">
                           <i class="el-icon-menu"></i>
                           <span slot="title" :title="item.name">{{item.name}}</span>
                       </el-menu-item>

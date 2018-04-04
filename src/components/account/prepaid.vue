@@ -245,32 +245,43 @@ export default {
                         sysUserOff({
                             appendUrl: "/"+data,
                         }).then((data)=> {
+                            done();
+                            instance.confirmButtonLoading = false;
                             if(data.data.success) {
-                                done();
-                                that.msg = state + "成功";
-                                instance.confirmButtonLoading = false;
+                                that.$message({
+                                    type: 'success',
+                                    message: state + "成功"
+                                });
+
                                 that.getData()
+                            } else {
+
                             }
                         })
                     } else {
                         sysUserOn({
                             appendUrl: "/"+data,
                         }).then((data)=> {
+                            done();
+                            instance.confirmButtonLoading = false;
                             if(data.data.success) {
-                                done();
-                                that.msg = state + "成功";
-                                instance.confirmButtonLoading = false;
+                                that.$message({
+                                    type: 'success',
+                                    message: state + "成功"
+                                });
                                 that.getData()
+                            } else {
+
                             }
                         })
                     }
-                },
-                then() {
-                    that.$message({
-                        type: 'success',
-                        message: that.msg
-                    });
                 }
+                // then() {
+                //     that.$message({
+                //         type: 'success',
+                //         message: that.msg
+                //     });
+                // }
 
             })
         },
@@ -288,22 +299,19 @@ export default {
                                 amount: instance.inputValue
                             }
                     }).then((data)=> {
-                        if(data.data.success) {
-                            done();
-                            that.msg = "提交成功"
-                            that.getData();
-                        } else {
-                            that.msg = data.data.errmsg;
-                        }
                         done();
                         instance.confirmButtonLoading = false;
+                        if(data.data.success) {
+                            that.$message({
+                                type: 'success',
+                                message: "提交成功"
+                            });
+                            that.getData();
+                        } else {
+
+                        }
+
                     })
-                },
-                then() {
-                    that.$message({
-                        type: 'success',
-                        message: that.msg
-                    });
                 }
 
             })

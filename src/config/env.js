@@ -9,12 +9,12 @@
 let baseUrl = '';
 let baseImgPath;
 if (process.env.NODE_ENV == 'development') {
-	// baseUrl = '/static/json';
-	// baseUrl =  "http://101.26.83.6:8186/WeChat_JNJD"
-	baseUrl =  "http://121.42.246.183:8099/WeChat_JNJD"
+	baseUrl =  "http://101.26.83.6:8186"
+	// baseUrl =  "http://121.42.246.183:8099"
     baseImgPath = 'http://localhost:8080/img/';
 }else{
-	  baseUrl = 'http://121.42.246.183:8099/WeChat_JNJD';
+	  baseUrl = 'http://101.26.83.6:8186';
+	  // baseUrl =  "http://121.42.246.183:8099"
       baseImgPath = '';
 }
 
