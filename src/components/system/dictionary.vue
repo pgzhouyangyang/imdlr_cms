@@ -247,9 +247,6 @@ export default {
         getData() {
             var _this = this
             this.loading = true;
-            if(this.currentMenuId == 0) {
-               this.getTree()
-            }
             dictionaryAll({
                 appendUrl: "/"+_this.pageNow+"/"+_this.pageSize,
                 param: _this.getDataQuery,
@@ -295,6 +292,7 @@ export default {
         },
         // 编辑
         rowDblclick(row) {
+            this.ruleForm = clearForm(this.ruleForm);
             this.stateText = "编辑";
             this.ruleForm = {
                 name: row.name,
@@ -328,7 +326,7 @@ export default {
                  } else if(this.stateText == "编辑") {
                     editDictionary({
                         param: that.ruleForm
-                    }).then((msg)=> {
+                    }).then((data)=> {
                         if(data.data.success) {
                             this.getData();
                             this.$refs.append.close();
@@ -362,26 +360,20 @@ export default {
                             ids: ids
                         }
                     }).then((msg)=> {
+                        done();
+                        instance.confirmButtonLoading = false;
                         if(msg.data.success) {
-                            this.getData();
-                            this.$message({
+                            that.getData();
+                            that.$message({
                               type: 'success',
                               message: "删除成功"
                             });
                         } else {
 
                         }
-                        done();
-                        instance.confirmButtonLoading = false;
-                    })
-                },
-                then() {
-                    that.$message({
-                      type: 'success',
-                      message: that.msg
-                    });
-                }
 
+                    })
+                }
             })
         },
         // 关联等级
@@ -424,7 +416,7 @@ export default {
                       message: "关联成功"
                     });
                 } else {
-                    
+
                 }
             });
         },

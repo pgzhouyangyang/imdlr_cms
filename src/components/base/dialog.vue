@@ -55,10 +55,6 @@ export default {
     },
     mounted() {
 
-        // setTimeout(()=> {
-        //     scrollbar(this.$refs.scrollbar)
-        // },1000)
-
     },
     methods: {
         dialogConfirm() {
@@ -72,7 +68,7 @@ export default {
             this.loading = true;
             setTimeout(()=> {
                 scrollbar(this.$refs.scrollbarDialog)
-            },500)
+            },1000)
         },
         close() {
             this.dialogVisible = false;
@@ -90,18 +86,18 @@ export default {
 </script>
 
 <style lang="css">
-    .el-dialog__wrapper {
+    .container .el-dialog__wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
     }
-    .el-dialog__body {
-        max-height:400px;
+    .container .el-dialog__body {
+        max-height:600px;
     }
-    .el-dialog {
+    .container .el-dialog {
         margin: 0;
     }
-    .dialog-main {
+    .container .dialog-main {
         height: 100%;
     }
 </style>

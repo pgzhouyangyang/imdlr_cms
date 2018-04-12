@@ -65,10 +65,10 @@
                     :filter-method="filterTag"
                     filter-placement="bottom-end">
                     <template slot-scope="scope">
-                        <el-popover trigger="hover" placement="top">
+                        <el-popover trigger="hover" placement="right">
                           <p class="popover-p"><span>审核人: </span><span>{{ scope.row.auditor }}</span></p>
-                          <p class="popover-p"><span>审核时间: </span><span>{{ scope.row.registerTime?scope.row. registerTime:"-" }}</span></p>
-                          <p class="popover-p"><span>金额: </span><span>{{ scope.row. paymentAmount?scope.row.paymentAmount:"-" }}</span></p>
+                          <p class="popover-p"><span>审核时间: </span><span>{{ scope.row.auditTime?scope.row.auditTime:"-" }}</span></p>
+                          <p class="popover-p"><span>金额: </span><span>{{ scope.row. paymentAmount != 'undefined'?scope.row.paymentAmount:"-" }}</span></p>
                           <p class="popover-p"><span>支付时间: </span><span>{{ scope.row.paymentTime?scope.row.paymentTime:"-"  }}</span></p>
                           <div slot="reference" class="name-wrapper">
                               <el-tag

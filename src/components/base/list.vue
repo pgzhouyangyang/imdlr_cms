@@ -123,6 +123,7 @@ export default {
         height: 100%;
         background: #EAEDF1;
         width: 200px;
+
         /* margin-right: 10px; */
     }
     .list .el-menu {
@@ -145,13 +146,13 @@ export default {
         align-items: center;
     }
     .list .el-menu-item i {
-        flex:0;
+        flex:0 0 24px;
     }
     .list .el-menu-item span {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        flex: 1;
+        flex: 0 0 131px;
     }
 
 </style>

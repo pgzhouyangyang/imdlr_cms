@@ -57,10 +57,18 @@ export default {
             padding: 0 30px;
         }
     }
-    @media (min-width:1140px) {
+    @media (min-width:1140px) and (max-width:1360px) {
         .main {
             width: 1140px;
+            padding: 0 30px;
             margin: 0 auto;
+        }
+    }
+    @media (min-width:1360px) {
+        .main {
+            width: 1366px;
+            margin: 0 auto;
+            padding: 0 30px;
         }
     }
     .container {
@@ -171,6 +179,7 @@ export default {
         margin-right: -17px;
         height: 100%;
         overflow-y: scroll;
+        overflow-x: hidden;
     }
     .scrollbar__bar.is-vertical {
         width: 6px;

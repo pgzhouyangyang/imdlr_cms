@@ -33,11 +33,11 @@
 								</el-table-column>
 								<el-table-column prop="applyStatus" label="审核状态" show-overflow-tooltip align="center" min-width="120" :filters="[{ text: '待审核', value: '0' }, { text: '已驳回', value: '-1' }]" :filter-method="filterTag" filter-placement="bottom-end">
 									<template slot-scope="scope">
-										<el-popover trigger="hover" placement="top">
+										<el-popover trigger="hover" placement="right">
 											<p class="popover-p"><span>姓名 : </span><span>{{ scope.row.name }}</span></p>
 											<p class="popover-p"><span>注册时间 : </span><span>{{ scope.row.registerTime?scope.row. registerTime:"-" }}</span></p>
 											<p class="popover-p"><span>审核人 : </span><span>{{ scope.row.auditor?scope.row.auditor:"-" }}</span></p>
-											<p class="popover-p"><span>审核时间 : </span><span>{{ scope.row.address?scope.row.address:"-"  }}</span></p>
+											<p class="popover-p"><span>审核时间 : </span><span>{{ scope.row.auditTime?scope.row.auditTime:"-"  }}</span></p>
 											<div slot="reference" class="name-wrapper">
 												<el-tag :type="scope.row.applyStatus == '-1' ? 'danger' : ''" close-transition size="small">{{scope.row.applyStatus == "-1" ? "已驳回" : "待审核"}}</el-tag>
 											</div>
@@ -140,6 +140,7 @@
 			getData() {
                 var _this = this
                 this.loading = true;
+
 				authstr({
                     appendUrl: "/"+_this.pageNow+"/"+_this.pageSize,
                     param: _this.getDataQuery,

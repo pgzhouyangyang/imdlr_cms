@@ -286,13 +286,14 @@ export default {
             if(this.currentMenu != 0) {
                 obj.skillItem = this.currentMenu
             }
-            if(this.currentQuesType) {
+            if(this.currentQuesType&&this.currentQuesType!=0) {
                 obj.type = this.currentQuesType;
             }
             obj.skillLevel = this.radio;
             if(this.query) {
                 obj[this.query] = this.queryValue
             }
+            console.log(obj);
             return obj
         }
     },
@@ -523,5 +524,8 @@ export default {
     }
     .testOptions {
         margin-top: 10px;
+    }
+    .info-wrapp {
+        height: 500px;
     }
 </style>

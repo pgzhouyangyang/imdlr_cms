@@ -82,11 +82,11 @@ export default {
     methods: {
         exitBtn() {
             this.$store.commit("clearSession");
-            location.href = baseUrl + "/sys/logout";
+            // location.href = baseUrl + "/sys/logout";
 
-            // this.$router.replace({
-            //     path: "/login"
-            // })
+            this.$router.replace({
+                path: "/login"
+            })
 
         }
     }
@@ -104,6 +104,10 @@ export default {
     .logo, .user {
         display: flex;
         align-items: center;
+    }
+    .logo img {
+        height: 61px;
+        width: 76px;
     }
     .username {
         color: #fff;

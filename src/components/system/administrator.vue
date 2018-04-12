@@ -260,10 +260,13 @@ export default {
 		},
 		// 编辑
 		rowDblclick(row) {
+			// this.ruleForm = clearForm(this.ruleForm);
+
 			this.stateText = "编辑";
 			this.$refs.append.open();
 			this.ruleForm = {...row};
 			this.ruleForm.password = "***************";
+			console.log(this.ruleForm);
 		},
 		// 保存
 		save() {

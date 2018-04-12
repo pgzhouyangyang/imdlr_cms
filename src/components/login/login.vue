@@ -121,7 +121,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: url(/static/img/bg.jpg) center -130px no-repeat;
+        background: url(../../assets/img/bg.jpg) center -130px no-repeat;
     }
     .login-wrap {
         width: 350px;
