@@ -17,7 +17,6 @@
           <el-submenu index="account">
               <template slot="title">账号管理</template>
               <el-menu-item index="authstr" :route="{path:'/account/authstr'}">待审核列表</el-menu-item>
-
               <el-menu-item index="prepaid" :route="{path:'/account/prepaid'}">已支付列表</el-menu-item>
               <el-menu-item index="learning" :route="{path:'/account/learning'}">学习情况</el-menu-item>
           </el-submenu>
@@ -28,19 +27,19 @@
               <!-- :route="{path:'/information'}" -->
               消息管理
           </el-menu-item>
-          <el-submenu index="attachment">
+          <!-- <el-submenu index="attachment">
               <template slot="title">附件管理</template>
               <el-menu-item index="skillnotice" >鉴定公告
-                  <!-- :route="{path:'/attachment/skillnotice'}" -->
+                  :route="{path:'/attachment/skillnotice'}"
               </el-menu-item>
               <el-menu-item index="laws" >法律法规
-                  <!-- :route="{path:'/attachment/laws'}" -->
+                  :route="{path:'/attachment/laws'}"
               </el-menu-item>
               <el-menu-item index="standard" >实操规范
-                  <!-- :route="{path:'/attachment/standard'}" -->
+                  :route="{path:'/attachment/standard'}"
               </el-menu-item>
 
-          </el-submenu>
+          </el-submenu> -->
           <el-submenu index="system">
               <template slot="title">系统管理</template>
               <el-menu-item index="dictionary" :route="{path:'/system/dictionary'}">字典表</el-menu-item>

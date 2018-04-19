@@ -57,18 +57,16 @@ export default {
             padding: 0 30px;
         }
     }
-    @media (min-width:1140px) and (max-width:1360px) {
+    @media (min-width:1140px) and (max-width:1600px){
         .main {
             width: 1140px;
-            padding: 0 30px;
             margin: 0 auto;
         }
     }
-    @media (min-width:1360px) {
+    @media (min-width:1600px){
         .main {
-            width: 1366px;
+            width: 1440px;
             margin: 0 auto;
-            padding: 0 30px;
         }
     }
     .container {
@@ -157,6 +155,9 @@ export default {
         height: 45px;
         padding: 0;
         line-height: normal;
+    }
+    .el-table .cell button {
+        padding: 0;
     }
     .el-table__column-filter-trigger {
         line-height: normal;

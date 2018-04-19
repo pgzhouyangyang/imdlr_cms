@@ -264,7 +264,7 @@ export default {
 
 			this.stateText = "编辑";
 			this.$refs.append.open();
-			this.ruleForm = {...row};
+			this.ruleForm = Object.assign(this.ruleForm,{...row});
 			this.ruleForm.password = "***************";
 			console.log(this.ruleForm);
 		},
